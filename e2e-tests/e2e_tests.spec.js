@@ -7,3 +7,11 @@ describe('Pokedex', () => {
     await expect(page.getByText('Pokémon and Pokémon character names are trademarks of Nintendo.')).toBeVisible()
   })
 })
+
+describe('Pokedex', () => {
+  test('one can navigate from the main page to the page of a particular Pokemon', async ({ page }) => {
+    await page.goto('')
+    await page.goto('/pokemon/ivysaur')
+    await expect(page.getByText('chlorophyll')).toBeVisible()
+  })
+})
