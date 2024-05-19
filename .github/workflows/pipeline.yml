@@ -6,7 +6,10 @@ on:
       - main
   pull_request:
     branches: [main]
-    types: [opened, synchronize]    
+    types: [opened, synchronize]
+
+env:
+  COMMITS_MESSAGES: ${{ join(github.event.commits.*.message, ',') }}
 
 jobs:
   simple_deployment_pipeline:
@@ -31,7 +34,7 @@ jobs:
       - name: Run Playwright tests
         run: npx playwright test
       - name: Deploy
-        if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message), '#skip') }}
+        if: ${{ github.event_name == 'push' && !contains(env.COMMITS_MESSAGES, '#skip') }}
         env:
           deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
         run: |
@@ -44,7 +47,7 @@ jobs:
     steps:    
       - uses: actions/checkout@v4    
       - name: Bump version and push tag
-        if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message), '#skip') }}
+        if: ${{ github.event_name == 'push' && !contains(env.COMMITS_MESSAGES, '#skip') }}
         uses: anothrNick/github-tag-action@1.67.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
