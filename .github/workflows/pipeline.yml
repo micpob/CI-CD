@@ -11,6 +11,8 @@ on:
 env:
   COMMITS_MESSAGES: ${{ join(github.event.commits.*.message, ',') }}
 
+webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+
 jobs:
   simple_deployment_pipeline:
     runs-on: ubuntu-20.04
@@ -39,6 +41,32 @@ jobs:
           deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
         run: |
           curl "$deploy_url"
+      - name: Build successfull
+        uses: rjstone/discord-webhook-notify@v1
+        if: success()
+        with:
+            severity: info
+            username: GitHub
+            color: 'green'
+            avatarUrl: https://github.githubassets.com/images/modules/logos_page/Octocat.png
+            description: to https://ci-cd-mcz5.onrender.com by micpob
+            details: ''
+            footer: 'Severity: informational'
+            text: A new version of Pokedex deployed
+            webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+      - name: Build failed
+          uses: rjstone/discord-webhook-notify@v1
+          if: failure()
+          with:
+              severity: error
+              username: GitHub
+              color: 'red'
+              avatarUrl: https://github.githubassets.com/images/modules/logos_page/Octocat.png
+              description: commit ${{ github.head_ref }}.${{ github.sha }} by micpob broke the build
+              details: ''
+              footer: 'Severity: error'
+              text: Build failed
+              webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}    
   tag_release:
     needs: [simple_deployment_pipeline]
     runs-on: ubuntu-20.04
