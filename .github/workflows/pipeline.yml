@@ -40,8 +40,8 @@ jobs:
         run: |
           curl "$deploy_url"
       - name: Build successfull
-        if: ${{ success() }}
         uses: rjstone/discord-webhook-notify@v1
+        if: ${{ success() }}
         with:
           severity: info
           username: GitHub
@@ -53,8 +53,8 @@ jobs:
           text: A new version of Pokedex deployed
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
       - name: Build failed
-          if: ${{ failure() }}
           uses: rjstone/discord-webhook-notify@v1
+          if: ${{ failure() }}
           with:
             severity: error
             username: GitHub
