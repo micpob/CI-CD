@@ -53,18 +53,18 @@ jobs:
           text: A new version of Pokedex deployed
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
       - name: Build failed
-          uses: rjstone/discord-webhook-notify@v1
-          if: ${{ failure() }}
-          with:
-            severity: error
-            username: GitHub
-            color: 'red'
-            avatarUrl: https://github.githubassets.com/images/modules/logos_page/Octocat.png
-            description: commit ${{ github.head_ref }}.${{ github.sha }} by micpob broke the build
-            details: ''
-            footer: 'Severity: error'
-            text: Build failed
-            webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}    
+        uses: rjstone/discord-webhook-notify@v1
+        if: ${{ failure() }}
+        with:
+          severity: error
+          username: GitHub
+          color: 'red'
+          avatarUrl: https://github.githubassets.com/images/modules/logos_page/Octocat.png
+          description: commit ${{ github.head_ref }}.${{ github.sha }} by micpob broke the build
+          details: ''
+          footer: 'Severity: error'
+          text: Build failed
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}    
   tag_release:
     needs: [simple_deployment_pipeline]
     runs-on: ubuntu-20.04
