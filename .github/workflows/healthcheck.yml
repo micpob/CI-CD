@@ -1,4 +1,4 @@
-name: Healthcheck pipeline
+name: Healthcheck pipeline test
 
 on:
   push:
